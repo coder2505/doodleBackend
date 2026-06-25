@@ -29,7 +29,6 @@ public class RoomController {
         this.userRoomRepository = userRoomRepository;
     }
 
-
     @PostMapping("/create-room")
     public ResponseEntity<Map<String, String>> createRoom(@RequestBody CreateRoomReq createRoomReq) {
 
@@ -54,6 +53,37 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("room_id", room.getRoom_id().toString()));
 
         //@formatter:on
+
+
+    }
+
+    // using same request body, assuming room_name as room_id.
+    @PostMapping("/join-room")
+    public ResponseEntity<Map<String, String>> joinRoom(@RequestBody CreateRoomReq createRoomReq){
+
+        UUID roomid = UUID.fromString(createRoomReq.getRoom_name());
+
+        if(!roomRepository.existsById(roomid)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Room " +
+                    "Does not exist");
+        }
+
+        String user_id = JwtUtil.getClaims(createRoomReq.getAccess_token())
+                .getSubject();
+
+
+        // @formatter:off
+        UserRoom userRoom =
+                userRoomRepository.save(UserRoom.builder().
+                        room(Room.builder().room_id(roomid).room_name("dummy").build()).
+                        user(User.builder().user_id(UUID.fromString(user_id)).user_name("dummy").build())
+                        .build());
+
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("room_id",
+                roomid.toString()));
+
+        //@formatter:on
+
 
 
     }
