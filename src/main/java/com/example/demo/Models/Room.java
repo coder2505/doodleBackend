@@ -1,25 +1,19 @@
 package com.example.demo.Models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "users")
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
-
+@Table(name = "room")
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    UUID user_id;
+    UUID room_id;
 
-    String user_name;
-
+    String room_name;
 }

@@ -14,7 +14,7 @@ import java.util.Date;
 
 public class JwtUtil {
 
-        public static String generateToken(User user) {
+    public static String generateToken(User user) {
 
         return Jwts.builder()
                 .subject(user.getUser_id().toString())
@@ -48,7 +48,7 @@ public class JwtUtil {
 
     }
 
-    private static boolean isTokenValid(String token) {
+    public static boolean isTokenValid(String token) {
         return !isExpired(token);
     }
 
