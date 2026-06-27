@@ -9,9 +9,7 @@ import com.example.demo.Repository.UserRoomRepository;
 import com.example.demo.Security.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
@@ -29,18 +27,24 @@ public class RoomController {
         this.userRoomRepository = userRoomRepository;
     }
 
-    @PostMapping("/create-room")
-    public ResponseEntity<Map<String, String>> createRoom(@RequestBody CreateRoomReq createRoomReq) {
+    @PostMapping("/create-room/{roomName}")
+    public ResponseEntity<Map<String, String>> createRoom(@PathVariable String roomName, @RequestHeader("Authorization") String accessToken) {
 
-        if (!JwtUtil.isTokenValid(createRoomReq.getAccess_token())) {
+        if (!accessToken.startsWith("Bearer ")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "auth header Should start with bearer");
+        }
+
+        String token = accessToken.substring(7);
+
+        if (!JwtUtil.isTokenValid(token)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ACCESS" +
                     " TOKEN HAS EXPIRED");
         }
 
-        String user_id = JwtUtil.getClaims(createRoomReq.getAccess_token())
+        String user_id = JwtUtil.getClaims(token)
                 .getSubject();
         Room room = roomRepository.save(Room.builder()
-                .room_name(createRoomReq.getRoom_name()).build());
+                .room_name(roomName).build());
 
 
         // @formatter:off
@@ -58,32 +62,35 @@ public class RoomController {
     }
 
     // using same request body, assuming room_name as room_id.
-    @PostMapping("/join-room")
-    public ResponseEntity<Map<String, String>> joinRoom(@RequestBody CreateRoomReq createRoomReq){
+    @PostMapping("/join-room/{roomId}")
+    public ResponseEntity<Map<String, String>> joinRoom(@PathVariable String roomId, @RequestHeader("Authorization") String accessToken) {
 
-        UUID roomid = UUID.fromString(createRoomReq.getRoom_name());
-
-        if(!roomRepository.existsById(roomid)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Room " +
-                    "Does not exist");
+        if (!accessToken.startsWith("Bearer ")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "auth header Should start with bearer");
         }
 
-        String user_id = JwtUtil.getClaims(createRoomReq.getAccess_token())
+        String token = accessToken.substring(7);
+        UUID room_id = UUID.fromString(roomId);
+
+        if (!roomRepository.existsById(room_id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Room Does not exist");
+        }
+
+        String user_id = JwtUtil.getClaims(token)
                 .getSubject();
 
 
         // @formatter:off
         UserRoom userRoom =
                 userRoomRepository.save(UserRoom.builder().
-                        room(Room.builder().room_id(roomid).room_name("dummy").build()).
+                        room(Room.builder().room_id(room_id).room_name("dummy").build()).
                         user(User.builder().user_id(UUID.fromString(user_id)).user_name("dummy").build())
                         .build());
 
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("room_id",
-                roomid.toString()));
+                room_id.toString()));
 
         //@formatter:on
-
 
 
     }
