@@ -7,6 +7,8 @@ import com.example.demo.Models.UserRoom;
 import com.example.demo.Repository.RoomRepository;
 import com.example.demo.Repository.UserRoomRepository;
 import com.example.demo.Security.JwtUtil;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@Slf4j
 public class RoomController {
 
     private final RoomRepository roomRepository;
@@ -65,15 +68,18 @@ public class RoomController {
     @PostMapping("/join-room/{roomId}")
     public ResponseEntity<Map<String, String>> joinRoom(@PathVariable String roomId, @RequestHeader("Authorization") String accessToken) {
 
+        log.debug(roomId);
+
         if (!accessToken.startsWith("Bearer ")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "auth header Should start with bearer");
         }
-
         String token = accessToken.substring(7);
-        UUID room_id = UUID.fromString(roomId);
+        Long room_id = Long.valueOf(roomId.strip());
 
         if (!roomRepository.existsById(room_id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Room Does not exist");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "error",
+                    "room id does not exist"));
         }
 
         String user_id = JwtUtil.getClaims(token)

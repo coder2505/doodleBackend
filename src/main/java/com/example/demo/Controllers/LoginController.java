@@ -55,6 +55,8 @@ public class LoginController {
     @PostMapping("/user/{username}")
     public ResponseEntity<Map<String, String>> createUser(@PathVariable String username) {
 
+        log.debug("req came in");
+
         User user =
                 userRepository.save(User.builder()
                         .user_name(username)

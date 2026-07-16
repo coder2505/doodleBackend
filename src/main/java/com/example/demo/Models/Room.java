@@ -16,8 +16,8 @@ import java.util.UUID;
 @Table(name = "room")
 public class Room {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    UUID room_id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    Long room_id;
 
     String room_name;
 }

@@ -13,6 +13,6 @@ import java.util.UUID;
 public class UserRoomKey implements Serializable {
 
     UUID user_id;
-    UUID room_id;
+    Long room_id;
 
 }
