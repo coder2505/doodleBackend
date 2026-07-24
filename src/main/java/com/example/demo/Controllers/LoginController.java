@@ -52,14 +52,15 @@ public class LoginController {
 
     }
 
-    @PostMapping("/user/{username}")
-    public ResponseEntity<Map<String, String>> createUser(@PathVariable String username) {
+    @PostMapping("/user/{username}/{fcmToken}")
+    public ResponseEntity<Map<String, String>> createUser(@PathVariable String username, @PathVariable String fcmToken) {
 
         log.debug("req came in");
 
         User user =
                 userRepository.save(User.builder()
                         .user_name(username)
+                        .fcm_token(fcmToken)
                         .build());
 
         log.debug(user.toString());

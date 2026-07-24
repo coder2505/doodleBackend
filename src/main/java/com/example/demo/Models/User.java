@@ -19,7 +19,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID user_id;
-
     String user_name;
+    String fcm_token;
 
 }
