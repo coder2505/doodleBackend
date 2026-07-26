@@ -1,13 +1,11 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.Models.PostRequests.CreateRoomReq;
 import com.example.demo.Models.Room;
 import com.example.demo.Models.User;
 import com.example.demo.Models.UserRoom;
 import com.example.demo.Repository.RoomRepository;
 import com.example.demo.Repository.UserRoomRepository;
 import com.example.demo.Security.JwtUtil;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +17,20 @@ import java.util.UUID;
 
 @RestController
 @Slf4j
-public class RoomController {
+public class RoomSetupController {
 
     private final RoomRepository roomRepository;
     private final UserRoomRepository userRoomRepository;
 
-    public RoomController(RoomRepository roomRepository,
-                          UserRoomRepository userRoomRepository) {
+    public RoomSetupController(RoomRepository roomRepository,
+                               UserRoomRepository userRoomRepository) {
         this.roomRepository = roomRepository;
         this.userRoomRepository = userRoomRepository;
+    }
+
+    @GetMapping("/")
+    public String hi(){
+        return "welcome";
     }
 
     @PostMapping("/create-room/{roomName}")

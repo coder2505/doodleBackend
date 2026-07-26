@@ -18,13 +18,18 @@ public class FirebaseConfig {
         ClassPathResource resource = new ClassPathResource("doodleapp-firebase.json");
         InputStream serviceAccount = resource.getInputStream();
 
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setProjectId("doodleapp-fc91c")
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseUrl("https://doodleapp-fc91c-default-rtdb.firebaseio.com")
-                .build();
+        if(FirebaseApp.getApps().isEmpty()){
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setProjectId("doodleapp-fc91c")
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://doodleapp-fc91c-default-rtdb.firebaseio.com")
+                    .build();
 
-        return FirebaseApp.initializeApp(options);
+            return FirebaseApp.initializeApp(options);
+        }
+
+        return FirebaseApp.getInstance();
+
     }
 
 
