@@ -23,7 +23,8 @@ public class FCMSendDataLoad {
         this.fcmTokenService = fcmTokenService;
     }
 
-    public void SendNotif(List<UserRoom> membersOfRoom) throws IOException {
+    public void SendNotif(List<UserRoom> membersOfRoom, String userName,
+                          String payload) throws IOException {
 
         String fcmToken = fcmTokenService.getAccessToken();
 
@@ -32,9 +33,8 @@ public class FCMSendDataLoad {
             FirebaseFCMBody body = FirebaseFCMBody.builder().message(
                     FirebaseFCMBody.Message.builder().token(r.getUser().getFcm_token())
                             .notification(
-                                    FirebaseFCMBody.Message.Notification.builder().body(
-                                            "This is notification text").title("a dummy " +
-                                            "title").build()
+                                    FirebaseFCMBody.Message.Notification.builder().body(userName+"sent a message")
+                                            .title(payload).build()
 
                             ).build()
             ).build();

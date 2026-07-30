@@ -5,12 +5,10 @@ import com.example.demo.Models.User;
 import com.example.demo.Models.UserRoom;
 import com.example.demo.Repository.RoomRepository;
 import com.example.demo.Repository.UserRoomRepository;
-import com.example.demo.Security.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 import java.util.UUID;
@@ -34,21 +32,9 @@ public class RoomSetupController {
     }
 
     @PostMapping("/create-room/{roomName}")
-    public ResponseEntity<Map<String, String>> createRoom(@PathVariable String roomName, @RequestHeader("Authorization") String accessToken) {
+    public ResponseEntity<Map<String, String>> createRoom(@PathVariable String roomName, @RequestAttribute("user_id") String user_id) {
 
-        if (!accessToken.startsWith("Bearer ")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "auth header Should start with bearer");
-        }
 
-        String token = accessToken.substring(7);
-
-        if (!JwtUtil.isTokenValid(token)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ACCESS" +
-                    " TOKEN HAS EXPIRED");
-        }
-
-        String user_id = JwtUtil.getClaims(token)
-                .getSubject();
         Room room = roomRepository.save(Room.builder()
                 .room_name(roomName).build());
 
@@ -69,14 +55,8 @@ public class RoomSetupController {
 
     // using same request body, assuming room_name as room_id.
     @PostMapping("/join-room/{roomId}")
-    public ResponseEntity<Map<String, String>> joinRoom(@PathVariable String roomId, @RequestHeader("Authorization") String accessToken) {
+    public ResponseEntity<Map<String, String>> joinRoom(@PathVariable String roomId, @RequestHeader("Authorization") String accessToken, @RequestAttribute("user_id") String user_id) {
 
-        log.debug(roomId);
-
-        if (!accessToken.startsWith("Bearer ")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "auth header Should start with bearer");
-        }
-        String token = accessToken.substring(7);
         Long room_id = Long.valueOf(roomId.strip());
 
         if (!roomRepository.existsById(room_id)) {
@@ -84,9 +64,6 @@ public class RoomSetupController {
                     "error",
                     "room id does not exist"));
         }
-
-        String user_id = JwtUtil.getClaims(token)
-                .getSubject();
 
 
         // @formatter:off
