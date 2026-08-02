@@ -19,4 +19,5 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long room_id;
     String room_name;
+    String resource;
 }

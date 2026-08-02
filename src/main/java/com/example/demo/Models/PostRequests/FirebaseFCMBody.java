@@ -10,6 +10,9 @@ import lombok.Data;
 //            "body":"This is an FCM notification message!",
 //            "title":"FCM Message"
 //          }
+        //"data": {
+        //        "text": "12345",
+        //        }
 //       }
 //    }
 
@@ -26,14 +29,23 @@ public class FirebaseFCMBody {
 
         String token;
 
-        private Notification notification;
+//        private Notification notification;
+        private _Data data;
+
+//        @Builder
+//        @Data
+//        public static class Notification{
+//
+//            String body;
+//            String title;
+//
+//        }
 
         @Builder
         @Data
-        public static class Notification{
+        public static class _Data{
 
-            String body;
-            String title;
+            String text;
 
         }
 

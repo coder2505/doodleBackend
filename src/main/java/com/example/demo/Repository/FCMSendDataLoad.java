@@ -28,19 +28,25 @@ public class FCMSendDataLoad {
 
         String fcmToken = fcmTokenService.getAccessToken();
 
-        for(UserRoom r : membersOfRoom){
+        for (UserRoom r : membersOfRoom) {
 
             FirebaseFCMBody body = FirebaseFCMBody.builder().message(
-                    FirebaseFCMBody.Message.builder().token(r.getUser().getFcm_token())
-                            .notification(
-                                    FirebaseFCMBody.Message.Notification.builder().body(userName+"sent a message")
-                                            .title(payload).build()
-
+                    FirebaseFCMBody.Message.builder().token(r.getUser()
+                                    .getFcm_token())
+//                            .notification(
+//                                    FirebaseFCMBody.Message.Notification.builder()
+//                                            .title(userName + "sent a message")
+//                                            .build()
+//
+//                            )
+                            .data(
+                                    FirebaseFCMBody.Message._Data.builder()
+                                            .text(payload).build()
                             ).build()
             ).build();
 
             webClient.webClient().post().uri("/")
-                    .header("Authorization", "Bearer "+fcmToken)
+                    .header("Authorization", "Bearer " + fcmToken)
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(body).retrieve().toBodilessEntity().block();
 
