@@ -24,7 +24,6 @@ public class LoginController {
         this.userRepository = userRepository;
     }
 
-
     @PostMapping("/refresh")
     public ResponseEntity<Map<String, String>> refresh(@RequestBody RefreshReq refreshReq) {
 

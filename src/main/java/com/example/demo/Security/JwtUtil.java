@@ -27,12 +27,12 @@ public class JwtUtil {
     public static String generateRefreshToken(User user) {
 
            LocalDate date =
-                   LocalDate.now().plusDays(15);
+                   LocalDate.now().plusDays(365);
            ZoneId defaultZoneId = ZoneId.systemDefault();
 
         return Jwts.builder()
                 .subject(user.getUser_id().toString())
-                .expiration(Date.from(date.atStartOfDay(defaultZoneId).toInstant())) // 15 days
+                .expiration(Date.from(date.atStartOfDay(defaultZoneId).toInstant())) // 365 days
                 .signWith(getSigningKey())
                 .compact();
 
