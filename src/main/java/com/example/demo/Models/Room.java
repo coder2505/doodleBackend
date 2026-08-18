@@ -19,5 +19,8 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long room_id;
     String room_name;
-    String resource;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "textid", referencedColumnName = "textid")
+    private Text text;
 }

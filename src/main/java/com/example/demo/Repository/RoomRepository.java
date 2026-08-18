@@ -17,8 +17,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "UPDATE room set resource = :payload where room_id = :roomId", nativeQuery = true)
-    void updateResource(@Param("payload") String payload,
+    @Query(value = "UPDATE room set textid = :textid where room_id = :roomId",
+            nativeQuery = true)
+    void updateResource(@Param("textid") int textid,
                         @Param("roomId") Long roomId);
 
 }
