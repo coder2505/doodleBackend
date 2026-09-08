@@ -18,6 +18,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(interceptor).addPathPatterns("/**")
                 .excludePathPatterns("/login/**","/swagger-ui/**", "/v3/api" +
-                        "-docs/**", "/error");
+                        "-docs/**", "/error", "/actuator/**");
     }
 }
