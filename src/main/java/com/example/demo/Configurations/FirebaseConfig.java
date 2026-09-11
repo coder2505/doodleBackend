@@ -8,20 +8,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
-import java.io.InputStream;
+// import java.io.InputStream;
 
 @Configuration
 public class FirebaseConfig {
 
     @Bean
     FirebaseApp firebaseApp() throws IOException {
-        ClassPathResource resource = new ClassPathResource("doodleapp-firebase.json");
-        InputStream serviceAccount = resource.getInputStream();
+        // ClassPathResource resource = new ClassPathResource("doodleapp-firebase.json");
+        // InputStream serviceAccount = resource.getInputStream();
 
         if(FirebaseApp.getApps().isEmpty()){
             FirebaseOptions options = FirebaseOptions.builder()
                     .setProjectId("doodleapp-fc91c")
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setCredentials(GoogleCredentials.getApplicationDefault())
                     .setDatabaseUrl("https://doodleapp-fc91c-default-rtdb.firebaseio.com")
                     .build();
 
