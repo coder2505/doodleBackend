@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -21,6 +23,29 @@ public class GetDataControllers {
     public GetDataControllers(UserRepository userRepository, UserRoomRepository userRoomRepository) {
         this.userRepository = userRepository;
         this.userRoomRepository = userRoomRepository;
+    }
+
+    @GetMapping("/roomDetails")
+    public Map<String, String> getRoomDetails(@RequestAttribute("user_id") String user_id){
+
+
+        List<UserRoom> room =
+                userRoomRepository.findRoomIDByUserId(UUID.fromString(user_id));
+
+        if(room.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"user not " +
+                    "in a room");
+        }
+
+        Long roomCode = room.getFirst().getRoom().getRoom_id();
+        String roomName = room.getFirst().getRoom().getRoom_name();
+
+        Map<String, String> map = new HashMap<>();
+        map.put("roomCode", roomCode.toString());
+        map.put("roomName", roomName);
+
+        return map;
+
     }
 
 
