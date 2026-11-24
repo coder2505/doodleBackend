@@ -75,15 +75,27 @@ public class UpdateWidgetController {
                 userRepository.findById(UUID.fromString(userId)).get()
                         .getUser_name();
 
-        Text text =
-                textRepository.save(Text.builder().text(payload)
-                        .background(color).font(font).build());
-
-        roomRepository.updateResource(text.getTextid(),
-                room.getFirst().getRoom().getRoom_id()
-        );
-
         Long room_code = room.getFirst().getRoom().getRoom_id();
+
+        int room_textid =
+                    roomRepository.findById(room_code).get().getText().getTextid();
+
+
+        if(room_textid <=0){
+
+            // room has no textID
+            Text text = textRepository.save(Text.builder().text(payload)
+                            .background(color).font(font).build());
+
+            roomRepository.updateResource(text.getTextid(),
+                    room.getFirst().getRoom().getRoom_id());
+
+        }
+
+
+        textRepository.updateResource(payload, color, font, room_textid);
+
+
         List<UserRoom> membersOfRoom = userRoomRepository.findMembersOfRoom(room_code);
 
         fcmSendDataLoad.SendNotif(membersOfRoom, user_name, payload);

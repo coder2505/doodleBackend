@@ -11,7 +11,7 @@ public class WebClientConfig {
 
     @Bean
     public WebClient webClient() {
-        return WebClient.builder().baseUrl("https://fcm.googleapis.com/v1/projects/doodleapp-fc91c/messages:send").build();
+        return WebClient.builder().baseUrl("https://fcm.googleapis.com/v1/projects/doodle-backend/messages:send").build();
     }
 
 }
